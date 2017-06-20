@@ -6,4 +6,5 @@ You can run the playbook like this:
 ansible-playbook playbook-register-ssh-keys.yml -i <path-to-inventory>
 ```
 **The code provided here is based largely on the example provided by Ivan Pepelnjak, for which I thank him.**  
+**Ivan also runs the site ipspace.net. The site is of interest to anyone concerning him- or herself with networking.**  
 **See his original version: https://github.com/ipspace/NetOpsWorkshop/tree/master/tools/ssh-keys**
