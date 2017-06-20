@@ -1,0 +1,29 @@
+# This is based on the work of Ivan Pepelnjak from ipspace.net
+# https://github.com/ipspace/NetOpsWorkshop/tree/master/tools/ssh-keys
+# Adjusted for multitenancy by using one extra variable, 'customer_dir' in our case
+---
+- name: SSH key registration
+  hosts: all
+  gather_facts: no
+  connection: local
+  vars:
+    - known_hosts: "~/.ssh/known_hosts"
+  
+  tasks:
+  - name: scan and register
+    command: "ssh-keyscan {{ ansible_host }}"
+    register: "host_keys"
+    changed_when: false
+    
+  - file: path={{ known_hosts }} state=touch
+    run_once: true
+    changed_when: false
+      
+  - blockinfile:
+      path: "{{ known_hosts }}"
+      marker: "##### {mark} This part is managed by Ansible for customer: {{ customer_dir }}"
+      block: |
+        {% for host in groups['all'] if hostvars[host].host_keys is defined %}
+        {{ hostvars[host].host_keys.stdout }}
+        {% endfor %}
+    run_once: true
